@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import React, { useState } from "react";
 import { ReactComponent as DollarIcon } from "./images/icon-dollar.svg";
+import { ReactComponent as PersonIcon } from "./images/icon-person.svg";
 
 /* COLORS */
 const colorPrimary = "hsl(172, 67%, 45%)";
@@ -14,6 +15,9 @@ const colorWhite = "hsl(0, 0%, 100%)";
 /* FONT */
 const fontFamily = "'Space Mono', monospace";
 const formInputSize = "24px";
+
+/* STYLING */
+const borderRadiusSmall = "5px";
 
 const Wrapper = styled.div`
     background-color: ${colorNeutralCyanLight1};
@@ -37,7 +41,11 @@ const Calculator = styled.div`
     padding: 30px;
 `;
 
-const FormInputGroup = styled.div``;
+const Inputs = styled.form``;
+
+const FormInputGroup = styled.div`
+    margin-bottom: 24px;
+`;
 
 const Label = styled.label`
     color: ${colorNeutralCyanDark3};
@@ -53,12 +61,12 @@ const InputWrapper = styled.div`
     position: relative;
 `;
 
+// @TODO color is not working
 const IconStyle = {
     position: "absolute",
     top: "50%",
     left: "12px",
     transform: "translateY(-50%)",
-    color: "red",
 };
 
 const Input = styled.input`
@@ -70,7 +78,7 @@ const Input = styled.input`
     border: none;
     background-color: ${colorNeutralCyanLight2};
     padding: 0 12px;
-    border-radius: 5px;
+    border-radius: ${borderRadiusSmall};
     color: ${colorNeutralCyanDark1};
     font-weight: bold;
 
@@ -83,7 +91,21 @@ const Input = styled.input`
     }
 `;
 
+const Outputs = styled.div`
+    background-color: ${colorNeutralCyanDark3};
+`;
+
+const OutputGroup = styled.div``;
+
 function App() {
+    const [billAmount, setBillAmount] = useState("");
+
+    function onBillChange(event) {
+        event.preventDefault();
+        // @TODO add input validation
+        setBillAmount(event.target.value);
+    }
+
     return (
         <Wrapper>
             <Title>
@@ -92,15 +114,35 @@ function App() {
                 tter
             </Title>
             <Calculator>
-                <form>
+                <Inputs>
                     <FormInputGroup>
-                        <Label>Bill</Label>
+                        <Label htmlFor="bill">Bill</Label>
                         <InputWrapper>
                             <DollarIcon style={IconStyle} />
-                            <Input type="number" step="0.01" placeholder="0"></Input>
+                            <Input
+                                id="bill"
+                                type="number"
+                                step="0.01"
+                                placeholder="0"
+                                value={billAmount}
+                                onChange={onBillChange}
+                            ></Input>
                         </InputWrapper>
                     </FormInputGroup>
-                </form>
+                    <FormInputGroup>
+                        <Label>Select Tip %</Label>
+                    </FormInputGroup>
+                    <FormInputGroup>
+                        <Label>Number of People</Label>
+                        <InputWrapper>
+                            <PersonIcon style={IconStyle} />
+                            <Input id="people" type="number" step="1" placeholder="0"></Input>
+                        </InputWrapper>
+                    </FormInputGroup>
+                </Inputs>
+                <Outputs>
+                    <OutputGroup></OutputGroup>
+                </Outputs>
             </Calculator>
         </Wrapper>
     );
