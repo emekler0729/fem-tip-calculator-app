@@ -13,7 +13,7 @@ const Reset = createGlobalStyle`
 
 ReactDOM.render(
     <React.StrictMode>
-        <Reset></Reset>
+        <Reset />
         <App />
     </React.StrictMode>,
     document.getElementById("root")

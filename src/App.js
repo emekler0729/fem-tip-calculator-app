@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ReactComponent as DollarIcon } from "./images/icon-dollar.svg";
 import { ReactComponent as PersonIcon } from "./images/icon-person.svg";
 
@@ -16,8 +16,9 @@ const colorWhite = "hsl(0, 0%, 100%)";
 const fontFamily = "'Space Mono', monospace";
 const formInputSize = "24px";
 
-/* STYLING */
+/* MISC */
 const borderRadiusSmall = "5px";
+const horizontalPadding = "12px";
 
 const Wrapper = styled.div`
     background-color: ${colorNeutralCyanLight1};
@@ -47,7 +48,7 @@ const FormInputGroup = styled.div`
     margin-bottom: 24px;
 `;
 
-const Label = styled.label`
+const InputLabel = styled.label`
     color: ${colorNeutralCyanDark3};
     font-size: ${formInputSize / 2};
     font-weight: bold;
@@ -65,7 +66,7 @@ const InputWrapper = styled.div`
 const IconStyle = {
     position: "absolute",
     top: "50%",
-    left: "12px",
+    left: horizontalPadding,
     transform: "translateY(-50%)",
 };
 
@@ -77,7 +78,7 @@ const Input = styled.input`
     text-align: right;
     border: none;
     background-color: ${colorNeutralCyanLight2};
-    padding: 0 12px;
+    padding: 0 ${horizontalPadding};
     border-radius: ${borderRadiusSmall};
     color: ${colorNeutralCyanDark1};
     font-weight: bold;
@@ -91,20 +92,129 @@ const Input = styled.input`
     }
 `;
 
-const Outputs = styled.div`
-    background-color: ${colorNeutralCyanDark3};
+const ButtonGroup = styled.div`
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 15px 15px;
+
+    & > #${(props) => props.activeId} {
+        background-color: ${colorPrimary};
+        color: ${colorNeutralCyanDark1};
+    }
 `;
 
-const OutputGroup = styled.div``;
+const Button = styled.button`
+    background-color: ${colorNeutralCyanDark1};
+    border: none;
+    border-radius: ${borderRadiusSmall};
+    color: ${colorWhite};
+    font-size: ${formInputSize};
+    font-family: ${fontFamily};
+    padding: 4px 0;
+    font-weight: bold;
+`;
+
+const CustomButton = styled(Button)`
+    background-color: ${colorNeutralCyanLight2};
+    color: ${colorNeutralCyanDark3};
+`;
+
+const Outputs = styled.div`
+    background-color: ${colorNeutralCyanDark1};
+    border-radius: 10px;
+    padding: 24px 16px;
+`;
+
+const OutputGroup = styled.dl`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+`;
+
+const OutputLabel = styled.dt`
+    color: ${colorWhite};
+    font-weight: bold;
+
+    &::after {
+        content: "/ person";
+        display: block;
+        font-size: 14px;
+        color: ${colorNeutralCyanDark3};
+    }
+`;
+
+const OutputValue = styled.dd`
+    color: ${colorPrimary};
+    font-weight: bold;
+    font-size: 30px;
+`;
+
+const TIP_PERCENTAGE = {
+    tip5: 0.05,
+    tip10: 0.1,
+    tip15: 0.15,
+    tip25: 0.25,
+    tip50: 0.5,
+};
 
 function App() {
     const [billAmount, setBillAmount] = useState("");
+    const [tip, setTip] = useState({ id: "", percentage: 0 });
+    const [numberOfPeople, setNumberOfPeople] = useState("");
+    const [tipAmount, setTipAmount] = useState(0.0);
+    const [totalAmount, setTotalAmount] = useState(0.0);
 
     function onBillChange(event) {
         event.preventDefault();
-        // @TODO add input validation
-        setBillAmount(event.target.value);
+
+        const MAX_DIGITS = 15;
+        let userInput = event.target.value;
+
+        // @TODO Limit to 2 digits after decimal
+        if (userInput.length > MAX_DIGITS) {
+            userInput = Number(userInput.slice(0, MAX_DIGITS));
+            setBillAmount(Number(userInput));
+        } else if (userInput.length === 0) {
+            setBillAmount("");
+        } else {
+            setBillAmount(Number(userInput));
+        }
     }
+
+    function onButtonClick(event) {
+        event.preventDefault();
+        const id = event.target.id;
+        if (id === "custom") {
+            setTip({ id, percentage: 0.4 });
+        } else {
+            setTip({ id, percentage: TIP_PERCENTAGE[event.target.id] });
+        }
+    }
+
+    function onPeopleChange(event) {
+        event.preventDefault();
+        let userInput = event.target.value;
+
+        if (userInput < 1) {
+            setNumberOfPeople("");
+        } else {
+            setNumberOfPeople(parseInt(userInput));
+        }
+    }
+
+    useEffect(() => {
+        if (billAmount && tip.percentage && numberOfPeople) {
+            const tipAmount = billAmount * tip.percentage;
+            const total = parseFloat(billAmount) + parseFloat(tipAmount);
+
+            setTipAmount(tipAmount / numberOfPeople);
+            setTotalAmount(total / numberOfPeople);
+        } else {
+            setTipAmount(0);
+            setTotalAmount(0);
+        }
+    }, [billAmount, tip, numberOfPeople]);
 
     return (
         <Wrapper>
@@ -116,7 +226,7 @@ function App() {
             <Calculator>
                 <Inputs>
                     <FormInputGroup>
-                        <Label htmlFor="bill">Bill</Label>
+                        <InputLabel htmlFor="bill">Bill</InputLabel>
                         <InputWrapper>
                             <DollarIcon style={IconStyle} />
                             <Input
@@ -124,24 +234,57 @@ function App() {
                                 type="number"
                                 step="0.01"
                                 placeholder="0"
-                                value={billAmount}
+                                value={billAmount.toString()}
                                 onChange={onBillChange}
                             ></Input>
                         </InputWrapper>
                     </FormInputGroup>
                     <FormInputGroup>
-                        <Label>Select Tip %</Label>
+                        <InputLabel>Select Tip %</InputLabel>
+                        <ButtonGroup activeId={tip.id}>
+                            <Button onClick={onButtonClick} id="tip5">
+                                5%
+                            </Button>
+                            <Button onClick={onButtonClick} id="tip10">
+                                10%
+                            </Button>
+                            <Button onClick={onButtonClick} id="tip15">
+                                15%
+                            </Button>
+                            <Button onClick={onButtonClick} id="tip25">
+                                25%
+                            </Button>
+                            <Button onClick={onButtonClick} id="tip50">
+                                50%
+                            </Button>
+                            <Input id="custom" type="number" step="1" placeholder="Custom"></Input>
+                        </ButtonGroup>
                     </FormInputGroup>
                     <FormInputGroup>
-                        <Label>Number of People</Label>
+                        <InputLabel>Number of People</InputLabel>
                         <InputWrapper>
                             <PersonIcon style={IconStyle} />
-                            <Input id="people" type="number" step="1" placeholder="0"></Input>
+                            <Input
+                                id="people"
+                                type="number"
+                                step="1"
+                                placeholder="0"
+                                value={numberOfPeople}
+                                onChange={onPeopleChange}
+                            ></Input>
                         </InputWrapper>
                     </FormInputGroup>
                 </Inputs>
                 <Outputs>
-                    <OutputGroup></OutputGroup>
+                    <OutputGroup>
+                        <OutputLabel>Tip Amount</OutputLabel>
+                        <OutputValue>${tipAmount.toFixed(2)}</OutputValue>
+                    </OutputGroup>
+                    <OutputGroup>
+                        <OutputLabel>Total</OutputLabel>
+                        <OutputValue>${totalAmount.toFixed(2)}</OutputValue>
+                    </OutputGroup>
+                    <Button>Reset</Button>
                 </Outputs>
             </Calculator>
         </Wrapper>
