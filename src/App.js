@@ -20,6 +20,7 @@ const formInputSize = "24px";
 const borderRadiusSmall = "5px";
 const horizontalPadding = "12px";
 
+/* COMPONENTS */
 const Wrapper = styled.div`
     background-color: ${colorNeutralCyanLight1};
     min-height: 100vh;
@@ -129,7 +130,7 @@ const OutputGroup = styled.dl`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 `;
 
 const OutputLabel = styled.dt`
@@ -150,6 +151,19 @@ const OutputValue = styled.dd`
     font-size: 30px;
 `;
 
+const ResetButton = styled(Button)`
+    background-color: ${colorPrimary};
+    color: ${colorNeutralCyanDark1};
+    text-transform: uppercase;
+    width: 100%;
+    font-size: 20px;
+
+    &:disabled {
+        opacity: 20%;
+    }
+`;
+
+/* CONSTANTS */
 const TIP_PERCENTAGE = {
     tip5: 0.05,
     tip10: 0.1,
@@ -158,10 +172,16 @@ const TIP_PERCENTAGE = {
     tip50: 0.5,
 };
 
+const DEFAULT = {
+    BILL_AMOUNT: "",
+    TIP: { id: "", percentage: 0 },
+    NUMBER_OF_PEOPLE: "",
+};
+
 function App() {
-    const [billAmount, setBillAmount] = useState("");
-    const [tip, setTip] = useState({ id: "", percentage: 0 });
-    const [numberOfPeople, setNumberOfPeople] = useState("");
+    const [billAmount, setBillAmount] = useState(DEFAULT.BILL_AMOUNT);
+    const [tip, setTip] = useState(DEFAULT.TIP);
+    const [numberOfPeople, setNumberOfPeople] = useState(DEFAULT.NUMBER_OF_PEOPLE);
     const [tipAmount, setTipAmount] = useState(0.0);
     const [totalAmount, setTotalAmount] = useState(0.0);
 
@@ -201,6 +221,12 @@ function App() {
         } else {
             setNumberOfPeople(parseInt(userInput));
         }
+    }
+
+    function reset() {
+        setBillAmount(DEFAULT.BILL_AMOUNT);
+        setTip(DEFAULT.TIP);
+        setNumberOfPeople(DEFAULT.NUMBER_OF_PEOPLE);
     }
 
     useEffect(() => {
@@ -284,7 +310,9 @@ function App() {
                         <OutputLabel>Total</OutputLabel>
                         <OutputValue>${totalAmount.toFixed(2)}</OutputValue>
                     </OutputGroup>
-                    <Button>Reset</Button>
+                    <ResetButton disabled={!(billAmount || tip.percentage || numberOfPeople)} onClick={reset}>
+                        Reset
+                    </ResetButton>
                 </Outputs>
             </Calculator>
         </Wrapper>
