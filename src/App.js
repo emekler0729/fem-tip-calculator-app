@@ -83,6 +83,7 @@ const Input = styled.input`
     border-radius: ${borderRadiusSmall};
     color: ${colorNeutralCyanDark1};
     font-weight: bold;
+    cursor: pointer;
 
     &:focus-visible {
         outline-color: ${colorPrimary};
@@ -113,11 +114,14 @@ const Button = styled.button`
     font-family: ${fontFamily};
     padding: 4px 0;
     font-weight: bold;
-`;
+    cursor: pointer;
 
-const CustomButton = styled(Button)`
-    background-color: ${colorNeutralCyanLight2};
-    color: ${colorNeutralCyanDark3};
+    @media only screen and (min-width: 768px) {
+        &:hover {
+            background-color: hsl(172, 67%, 80%);
+            color: ${colorNeutralCyanDark1};
+        }
+    }
 `;
 
 const Outputs = styled.div`
@@ -188,17 +192,19 @@ function App() {
     function onBillChange(event) {
         event.preventDefault();
 
-        const MAX_DIGITS = 15;
         let userInput = event.target.value;
 
-        // @TODO Limit to 2 digits after decimal
-        if (userInput.length > MAX_DIGITS) {
-            userInput = Number(userInput.slice(0, MAX_DIGITS));
-            setBillAmount(Number(userInput));
-        } else if (userInput.length === 0) {
+        let [whole, _] = userInput.split(".");
+        whole = whole.length > 13 ? whole.slice(0, 13) : whole;
+        const decimal = userInput.match(/\.\d{0,2}/g);
+        const num = whole + (decimal || ".00");
+
+        if (userInput.length === 0 || Number(userInput) < 0) {
             setBillAmount("");
+        } else if (/\.0$/g.test(num)) {
+            setBillAmount(num);
         } else {
-            setBillAmount(Number(userInput));
+            setBillAmount(Number(num));
         }
     }
 
@@ -287,7 +293,7 @@ function App() {
                         </ButtonGroup>
                     </FormInputGroup>
                     <FormInputGroup>
-                        <InputLabel>Number of People</InputLabel>
+                        <InputLabel htmlFor="people">Number of People</InputLabel>
                         <InputWrapper>
                             <PersonIcon style={IconStyle} />
                             <Input
