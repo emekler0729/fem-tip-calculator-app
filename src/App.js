@@ -99,7 +99,7 @@ const ButtonGroup = styled.div`
     grid-template-columns: 1fr 1fr;
     grid-gap: 15px 15px;
 
-    & > #${(props) => props.activeId} {
+    & > Button#${(props) => props.activeId} {
         background-color: ${colorPrimary};
         color: ${colorNeutralCyanDark1};
     }
@@ -178,13 +178,15 @@ const TIP_PERCENTAGE = {
 
 const DEFAULT = {
     BILL_AMOUNT: "",
-    TIP: { id: "", percentage: 0 },
+    ACTIVE_TIP_BUTTON_ID: "",
+    TIP_PERCENTAGE: "",
     NUMBER_OF_PEOPLE: "",
 };
 
 function App() {
     const [billAmount, setBillAmount] = useState(DEFAULT.BILL_AMOUNT);
-    const [tip, setTip] = useState(DEFAULT.TIP);
+    const [activeTipButtonID, setActiveTipButtonID] = useState(DEFAULT.ACTIVE_TIP_BUTTON_ID);
+    const [tipPercentage, setTipPercentage] = useState(DEFAULT.TIP_PERCENTAGE);
     const [numberOfPeople, setNumberOfPeople] = useState(DEFAULT.NUMBER_OF_PEOPLE);
     const [tipAmount, setTipAmount] = useState(0.0);
     const [totalAmount, setTotalAmount] = useState(0.0);
@@ -212,9 +214,9 @@ function App() {
         event.preventDefault();
         const id = event.target.id;
         if (id === "custom") {
-            setTip({ id, percentage: 0.4 });
         } else {
-            setTip({ id, percentage: TIP_PERCENTAGE[event.target.id] });
+            setActiveTipButtonID(id);
+            setTipPercentage(TIP_PERCENTAGE[id]);
         }
     }
 
@@ -231,13 +233,14 @@ function App() {
 
     function reset() {
         setBillAmount(DEFAULT.BILL_AMOUNT);
-        setTip(DEFAULT.TIP);
+        setActiveTipButtonID(DEFAULT.ACTIVE_TIP_BUTTON_ID);
+        setTipPercentage(DEFAULT.TIP_PERCENTAGE);
         setNumberOfPeople(DEFAULT.NUMBER_OF_PEOPLE);
     }
 
     useEffect(() => {
-        if (billAmount && tip.percentage && numberOfPeople) {
-            const tipAmount = billAmount * tip.percentage;
+        if (billAmount && tipPercentage && numberOfPeople) {
+            const tipAmount = billAmount * tipPercentage;
             const total = parseFloat(billAmount) + parseFloat(tipAmount);
 
             setTipAmount(tipAmount / numberOfPeople);
@@ -246,7 +249,7 @@ function App() {
             setTipAmount(0);
             setTotalAmount(0);
         }
-    }, [billAmount, tip, numberOfPeople]);
+    }, [billAmount, tipPercentage, numberOfPeople]);
 
     return (
         <Wrapper>
@@ -273,7 +276,7 @@ function App() {
                     </FormInputGroup>
                     <FormInputGroup>
                         <InputLabel>Select Tip %</InputLabel>
-                        <ButtonGroup activeId={tip.id}>
+                        <ButtonGroup activeId={activeTipButtonID}>
                             <Button onClick={onButtonClick} id="tip5">
                                 5%
                             </Button>
@@ -316,7 +319,7 @@ function App() {
                         <OutputLabel>Total</OutputLabel>
                         <OutputValue>${totalAmount.toFixed(2)}</OutputValue>
                     </OutputGroup>
-                    <ResetButton disabled={!(billAmount || tip.percentage || numberOfPeople)} onClick={reset}>
+                    <ResetButton disabled={!(billAmount || tipPercentage || numberOfPeople)} onClick={reset}>
                         Reset
                     </ResetButton>
                 </Outputs>
