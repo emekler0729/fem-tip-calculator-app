@@ -25,6 +25,7 @@ const Wrapper = styled.div`
     background-color: ${colorNeutralCyanLight1};
     min-height: 100vh;
     display: grid;
+    grid-template-rows: 15% auto;
     place-items: center;
     font-family: ${fontFamily};
 `;
@@ -36,14 +37,26 @@ const Title = styled.h1`
 `;
 
 const Calculator = styled.div`
-    width: 100%;
+    max-width: 375px;
     background-color: ${colorWhite};
     border-radius: 20px;
     overflow: hidden;
     padding: 30px;
+    align-self: start;
+
+    @media only screen and (min-width: 768px) {
+        display: flex;
+        justify-content: space-between;
+        max-width: 768px;
+        margin-top: 50px;
+    }
 `;
 
-const Inputs = styled.form``;
+const Inputs = styled.form`
+    @media only screen and (min-width: 768px) {
+        flex: 0 0 50%;
+    }
+`;
 
 const FormInputGroup = styled.div`
     margin-bottom: 24px;
@@ -103,6 +116,16 @@ const ButtonGroup = styled.div`
         background-color: ${colorPrimary};
         color: ${colorNeutralCyanDark1};
     }
+
+    & > Input#${(props) => props.activeId} {
+        outline: ${colorPrimary} auto 1px;
+        outline-offset: 0px;
+    }
+
+    @media only screen and (min-width: 768px) {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+    }
 `;
 
 const Button = styled.button`
@@ -128,6 +151,15 @@ const Outputs = styled.div`
     background-color: ${colorNeutralCyanDark1};
     border-radius: 10px;
     padding: 24px 16px;
+
+    @media only screen and (min-width: 768px) {
+        flex: 1 0 auto;
+        margin-left: 30px;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
 `;
 
 const OutputGroup = styled.dl`
@@ -208,6 +240,13 @@ function App() {
         } else {
             setBillAmount(Number(num));
         }
+    }
+
+    // TODO add Input validation
+    function onCustomChange(event) {
+        event.preventDefault();
+        setTipPercentage(Number(event.target.value / 100));
+        setActiveTipButtonID("custom");
     }
 
     function onButtonClick(event) {
@@ -292,7 +331,14 @@ function App() {
                             <Button onClick={onButtonClick} id="tip50">
                                 50%
                             </Button>
-                            <Input id="custom" type="number" step="1" placeholder="Custom"></Input>
+                            <Input
+                                id="custom"
+                                type="number"
+                                step="1"
+                                placeholder="Custom"
+                                value={activeTipButtonID === "custom" ? tipPercentage * 100 : ""}
+                                onChange={onCustomChange}
+                            ></Input>
                         </ButtonGroup>
                     </FormInputGroup>
                     <FormInputGroup>
@@ -311,14 +357,16 @@ function App() {
                     </FormInputGroup>
                 </Inputs>
                 <Outputs>
-                    <OutputGroup>
-                        <OutputLabel>Tip Amount</OutputLabel>
-                        <OutputValue>${tipAmount.toFixed(2)}</OutputValue>
-                    </OutputGroup>
-                    <OutputGroup>
-                        <OutputLabel>Total</OutputLabel>
-                        <OutputValue>${totalAmount.toFixed(2)}</OutputValue>
-                    </OutputGroup>
+                    <div>
+                        <OutputGroup>
+                            <OutputLabel>Tip Amount</OutputLabel>
+                            <OutputValue>${tipAmount.toFixed(2)}</OutputValue>
+                        </OutputGroup>
+                        <OutputGroup>
+                            <OutputLabel>Total</OutputLabel>
+                            <OutputValue>${totalAmount.toFixed(2)}</OutputValue>
+                        </OutputGroup>
+                    </div>
                     <ResetButton disabled={!(billAmount || tipPercentage || numberOfPeople)} onClick={reset}>
                         Reset
                     </ResetButton>
