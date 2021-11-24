@@ -1,15 +1,23 @@
 /*  @TODO
-    Add Number of People Active State (Number of People Can't be Zero Warning)
-    -Change input parsing to allow for a zero value.
-    -Create a style that is applied when the value is zero.
-    Fixed clipping on the "Custom" default state text
-    Make the calculator larger on large screens (150%)
-    Add margin from top on large screens
-    Reduce Font Size of Title on Large Screens & possible on small too?
-    Disable Mouseover Reset Button when in disabled state.
-    Check math for example input ($142.55 & 5 people)
-    Input validation for the Custom Input Field
-    Output validation for UI.
+    NUMBER OF PEOPLE INPUT
+        Add Number of People Active State (Number of People Can't be Zero Warning)
+            Change input parsing to allow for a zero value.
+            Create a style that is applied when the value is zero.
+    
+    ALL ELEMENTS
+        Make the calculator larger on large screens (150%)
+    
+    RESET BUTTON
+        Disable Mouseover Reset Button when in disabled state.
+    
+    CALCULATION LOGIC
+        Check math for example input ($142.55 & 5 people)
+
+    CUSTOM INPUT FIELD
+        Input validation for the Custom Input Field
+
+    OUTPUT VISUALS
+        Output validation for UI.
 */
 
 import styled from "styled-components";
@@ -38,6 +46,7 @@ const BREAKPOINT = {
 /* MISC */
 const borderRadiusSmall = "5px";
 const horizontalPadding = "12px";
+const titlePadding = "50px";
 
 /* COMPONENTS */
 const Wrapper = styled.div`
@@ -47,12 +56,21 @@ const Wrapper = styled.div`
     grid-template-rows: 15% auto;
     place-items: center;
     font-family: ${fontFamily};
+
+    @media only screen and (min-width: ${BREAKPOINT.MD}) {
+        padding-top: ${titlePadding};
+    }
 `;
 
 const Title = styled.h1`
     color: ${colorNeutralCyanDark1};
     text-transform: uppercase;
     letter-spacing: 10px;
+    font-size: 1.5rem;
+
+    @media only screen and (min-width: ${BREAKPOINT.MD}) {
+        margin-bottom: ${titlePadding};
+    }
 `;
 
 const Calculator = styled.div`
@@ -67,7 +85,6 @@ const Calculator = styled.div`
         display: flex;
         justify-content: space-between;
         max-width: 768px;
-        margin-top: 50px;
     }
 `;
 
