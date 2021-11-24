@@ -1,3 +1,17 @@
+/*  @TODO
+    Add Number of People Active State (Number of People Can't be Zero Warning)
+    -Change input parsing to allow for a zero value.
+    -Create a style that is applied when the value is zero.
+    Fixed clipping on the "Custom" default state text
+    Make the calculator larger on large screens (150%)
+    Add margin from top on large screens
+    Reduce Font Size of Title on Large Screens & possible on small too?
+    Disable Mouseover Reset Button when in disabled state.
+    Check math for example input ($142.55 & 5 people)
+    Input validation for the Custom Input Field
+    Output validation for UI.
+*/
+
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 import { ReactComponent as DollarIcon } from "./images/icon-dollar.svg";
@@ -16,6 +30,11 @@ const colorWhite = "hsl(0, 0%, 100%)";
 const fontFamily = "'Space Mono', monospace";
 const formInputSize = "24px";
 
+/* BREAKPOINTS */
+const BREAKPOINT = {
+    MD: "768px",
+};
+
 /* MISC */
 const borderRadiusSmall = "5px";
 const horizontalPadding = "12px";
@@ -31,7 +50,7 @@ const Wrapper = styled.div`
 `;
 
 const Title = styled.h1`
-    color: ${colorNeutralCyanDark2};
+    color: ${colorNeutralCyanDark1};
     text-transform: uppercase;
     letter-spacing: 10px;
 `;
@@ -63,7 +82,7 @@ const FormInputGroup = styled.div`
 `;
 
 const InputLabel = styled.label`
-    color: ${colorNeutralCyanDark3};
+    color: ${colorNeutralCyanDark2};
     font-size: ${formInputSize / 2};
     font-weight: bold;
     display: block;
@@ -104,6 +123,29 @@ const Input = styled.input`
 
     &::placeholder {
         color: ${colorNeutralCyanDark3};
+    }
+
+    @media only screen and (hover: hover) {
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+            margin-left: 10px;
+        }
+    }
+`;
+
+const CustomInput = styled(Input)`
+    -moz-appearance: textfield;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    &::placeholder {
+        color: ${colorNeutralCyanDark2};
+        @media only screen and (min-width: ${BREAKPOINT.MD}) {
+            letter-spacing: -1px;
+        }
     }
 `;
 
@@ -331,14 +373,14 @@ function App() {
                             <Button onClick={onButtonClick} id="tip50">
                                 50%
                             </Button>
-                            <Input
+                            <CustomInput
                                 id="custom"
                                 type="number"
                                 step="1"
                                 placeholder="Custom"
                                 value={activeTipButtonID === "custom" ? tipPercentage * 100 : ""}
                                 onChange={onCustomChange}
-                            ></Input>
+                            ></CustomInput>
                         </ButtonGroup>
                     </FormInputGroup>
                     <FormInputGroup>
