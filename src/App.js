@@ -7,9 +7,6 @@
     ALL ELEMENTS
         Make the calculator larger on large screens (150%)
     
-    RESET BUTTON
-        Disable Mouseover Reset Button when in disabled state.
-    
     CALCULATION LOGIC
         Check math for example input ($142.55 & 5 people)
 
@@ -36,7 +33,7 @@ const colorWhite = "hsl(0, 0%, 100%)";
 
 /* FONT */
 const fontFamily = "'Space Mono', monospace";
-const formInputSize = "24px";
+const formInputSize = "2.4rem";
 
 /* BREAKPOINTS */
 const BREAKPOINT = {
@@ -45,8 +42,8 @@ const BREAKPOINT = {
 
 /* MISC */
 const borderRadiusSmall = "5px";
-const horizontalPadding = "12px";
-const titlePadding = "50px";
+const horizontalPadding = "1.2rem";
+const titlePadding = "5rem";
 
 /* COMPONENTS */
 const Wrapper = styled.div`
@@ -66,7 +63,7 @@ const Title = styled.h1`
     color: ${colorNeutralCyanDark1};
     text-transform: uppercase;
     letter-spacing: 10px;
-    font-size: 1.5rem;
+    font-size: 2.4rem;
 
     @media only screen and (min-width: ${BREAKPOINT.MD}) {
         margin-bottom: ${titlePadding};
@@ -78,13 +75,13 @@ const Calculator = styled.div`
     background-color: ${colorWhite};
     border-radius: 20px;
     overflow: hidden;
-    padding: 30px;
+    padding: 3rem;
     align-self: start;
 
     @media only screen and (min-width: 768px) {
         display: flex;
         justify-content: space-between;
-        max-width: 768px;
+        max-width: 76.8rem;
     }
 `;
 
@@ -95,15 +92,15 @@ const Inputs = styled.form`
 `;
 
 const FormInputGroup = styled.div`
-    margin-bottom: 24px;
+    margin-bottom: 2.4rem;
 `;
 
 const InputLabel = styled.label`
     color: ${colorNeutralCyanDark2};
-    font-size: ${formInputSize / 2};
+    font-size: 1.6rem;
     font-weight: bold;
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 0.5rem;
 `;
 
 const InputWrapper = styled.div`
@@ -145,7 +142,7 @@ const Input = styled.input`
     @media only screen and (hover: hover) {
         &::-webkit-outer-spin-button,
         &::-webkit-inner-spin-button {
-            margin-left: 10px;
+            margin-left: 1rem;
         }
     }
 `;
@@ -169,7 +166,7 @@ const CustomInput = styled(Input)`
 const ButtonGroup = styled.div`
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-gap: 15px 15px;
+    grid-gap: 1.5rem 1.5rem;
 
     & > Button#${(props) => props.activeId} {
         background-color: ${colorPrimary};
@@ -194,7 +191,7 @@ const Button = styled.button`
     color: ${colorWhite};
     font-size: ${formInputSize};
     font-family: ${fontFamily};
-    padding: 4px 0;
+    padding: 0.4rem 0;
     font-weight: bold;
 
     &:not(:disabled) {
@@ -212,11 +209,11 @@ const Button = styled.button`
 const Outputs = styled.div`
     background-color: ${colorNeutralCyanDark1};
     border-radius: 10px;
-    padding: 24px 16px;
+    padding: 2.4rem 1.6rem;
 
     @media only screen and (min-width: 768px) {
         flex: 1 0 auto;
-        margin-left: 30px;
+        margin-left: 3rem;
 
         display: flex;
         flex-direction: column;
@@ -228,17 +225,18 @@ const OutputGroup = styled.dl`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 25px;
+    margin-bottom: 2.5rem;
 `;
 
 const OutputLabel = styled.dt`
     color: ${colorWhite};
     font-weight: bold;
+    font-size: 1.6rem;
 
     &::after {
         content: "/ person";
         display: block;
-        font-size: 14px;
+        font-size: 1.4rem;
         color: ${colorNeutralCyanDark3};
     }
 `;
@@ -246,7 +244,7 @@ const OutputLabel = styled.dt`
 const OutputValue = styled.dd`
     color: ${colorPrimary};
     font-weight: bold;
-    font-size: 30px;
+    font-size: 3rem;
 `;
 
 const ResetButton = styled(Button)`
@@ -254,7 +252,7 @@ const ResetButton = styled(Button)`
     color: ${colorNeutralCyanDark1};
     text-transform: uppercase;
     width: 100%;
-    font-size: 20px;
+    font-size: 2rem;
 
     &:disabled {
         opacity: 20%;
