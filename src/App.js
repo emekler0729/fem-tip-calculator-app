@@ -196,10 +196,13 @@ const Button = styled.button`
     font-family: ${fontFamily};
     padding: 4px 0;
     font-weight: bold;
-    cursor: pointer;
+
+    &:not(:disabled) {
+        cursor: pointer;
+    }
 
     @media only screen and (min-width: 768px) {
-        &:hover {
+        &:not(:disabled):hover {
             background-color: hsl(172, 67%, 80%);
             color: ${colorNeutralCyanDark1};
         }
