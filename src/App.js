@@ -1,11 +1,7 @@
 /*  @TODO
     NUMBER OF PEOPLE INPUT
         Add Number of People Active State (Number of People Can't be Zero Warning)
-            Change input parsing to allow for a zero value.
             Create a style that is applied when the value is zero.
-    
-    ALL ELEMENTS
-        Make the calculator larger on large screens (150%)
     
     CALCULATION LOGIC
         Check math for example input ($142.55 & 5 people)
@@ -30,6 +26,7 @@ const colorNeutralCyanDark3 = "hsl(184, 14%, 56%)";
 const colorNeutralCyanLight1 = "hsl(185, 41%, 84%)";
 const colorNeutralCyanLight2 = "hsl(189, 41%, 97%)";
 const colorWhite = "hsl(0, 0%, 100%)";
+const colorAlert = "#ff7000";
 
 /* FONT */
 const fontFamily = "'Space Mono', monospace";
@@ -93,14 +90,31 @@ const Inputs = styled.form`
 
 const FormInputGroup = styled.div`
     margin-bottom: 2.4rem;
+    position: relative;
 `;
 
 const InputLabel = styled.label`
     color: ${colorNeutralCyanDark2};
     font-size: 1.6rem;
     font-weight: bold;
-    display: block;
+    display: inline-block;
     margin-bottom: 0.5rem;
+`;
+
+const AlertLabel = styled(InputLabel)`
+    display: inline;
+    position: absolute;
+    right: 0;
+    text-align: right;
+    color: ${colorAlert};
+    opacity: ${(props) => (props.alert ? "100%" : "0%")};
+
+    transition: opacity 0.1s;
+
+    @media only screen and (max-width: 374px) {
+        font-size: 1.2rem;
+        top: 4px;
+    }
 `;
 
 const InputWrapper = styled.div`
@@ -119,6 +133,7 @@ const IconStyle = {
 
 const Input = styled.input`
     display: block;
+    position: relative;
     width: 100%;
     font-size: ${formInputSize};
     font-family: ${fontFamily};
@@ -131,8 +146,13 @@ const Input = styled.input`
     font-weight: bold;
     cursor: pointer;
 
+    outline: ${(props) => (props.alert ? `${colorAlert} auto 1px` : "none")};
+    transition: outline 0.1s;
+
     &:focus-visible {
-        outline-color: ${colorPrimary};
+        outline-style: auto;
+        outline-width: 1px;
+        outline-color: ${(props) => (props.alert ? colorAlert : colorPrimary)};
     }
 
     &::placeholder {
@@ -194,11 +214,13 @@ const Button = styled.button`
     padding: 0.4rem 0;
     font-weight: bold;
 
+    transition: background-color 0.1s, color 0.1s;
+
     &:not(:disabled) {
         cursor: pointer;
     }
 
-    @media only screen and (min-width: 768px) {
+    @media only screen and (hover: hover) {
         &:not(:disabled):hover {
             background-color: hsl(172, 67%, 80%);
             color: ${colorNeutralCyanDark1};
@@ -323,9 +345,11 @@ function App() {
         event.preventDefault();
         let userInput = event.target.value;
 
-        if (userInput < 1) {
+        if (userInput < 0) {
             setNumberOfPeople("");
         } else {
+            console.log({ userInput });
+            console.log(parseInt(userInput));
             setNumberOfPeople(parseInt(userInput));
         }
     }
@@ -397,12 +421,15 @@ function App() {
                                 step="1"
                                 placeholder="Custom"
                                 value={activeTipButtonID === "custom" ? tipPercentage * 100 : ""}
-                                onChange={onCustomChange}
+                                onInput={onCustomChange}
                             ></CustomInput>
                         </ButtonGroup>
                     </FormInputGroup>
                     <FormInputGroup>
                         <InputLabel htmlFor="people">Number of People</InputLabel>
+                        <AlertLabel as="span" alert={numberOfPeople === 0}>
+                            Can't be zero
+                        </AlertLabel>
                         <InputWrapper>
                             <PersonIcon style={IconStyle} />
                             <Input
@@ -410,8 +437,9 @@ function App() {
                                 type="number"
                                 step="1"
                                 placeholder="0"
-                                value={numberOfPeople}
+                                value={numberOfPeople.toString()}
                                 onChange={onPeopleChange}
+                                alert={numberOfPeople === 0}
                             ></Input>
                         </InputWrapper>
                     </FormInputGroup>
