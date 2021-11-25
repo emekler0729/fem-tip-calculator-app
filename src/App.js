@@ -1,9 +1,9 @@
 /*  @TODO
     CUSTOM INPUT FIELD
-        Input validation for the Custom Input Field
+        Show percent symbol after Custom Input      
 
     OUTPUT VISUALS
-        Output validation for UI.
+        Make output responsive for all input cases
 */
 
 import styled from "styled-components";
@@ -68,6 +68,10 @@ const Calculator = styled.div`
     padding: 3rem;
     align-self: start;
 
+    @media only screen and (max-width: 374px) {
+        padding: 1rem;
+    }
+
     @media only screen and (min-width: 768px) {
         display: flex;
         justify-content: space-between;
@@ -82,7 +86,14 @@ const Inputs = styled.form`
 `;
 
 const FormInputGroup = styled.div`
-    margin-bottom: 2.4rem;
+    &:not(:last-of-type) {
+        margin-bottom: 2.4rem;
+    }
+
+    @media only screen and (max-width: ${BREAKPOINT.MD}) {
+        margin-bottom: 2.4rem;
+    }
+
     position: relative;
 `;
 
@@ -254,12 +265,19 @@ const OutputLabel = styled.dt`
         font-size: 1.4rem;
         color: ${colorNeutralCyanDark3};
     }
+
+    @media only screen and (max-width: 374px) {
+        font-size: 1.5rem;
+    }
 `;
 
 const OutputValue = styled.dd`
     color: ${colorPrimary};
     font-weight: bold;
     font-size: 3rem;
+    @media only screen and (max-width: 374px) {
+        font-size: 2.7rem;
+    }
 `;
 
 const ResetButton = styled(Button)`
@@ -304,9 +322,15 @@ function App() {
         const userInput = event.target.value;
 
         let [whole, _] = userInput.split(".");
-        whole = whole.length > 6 ? whole.slice(0, 6) : whole;
-        const decimal = userInput.match(/\.\d{0,2}/g);
-        const num = whole + (decimal || ".00");
+        let decimal;
+        let num;
+        if (whole == 100000) {
+            num = 99999.99;
+        } else {
+            whole = whole.length > 5 ? whole.slice(0, 5) : whole;
+            decimal = userInput.match(/\.\d{0,2}/g);
+            num = whole + (decimal || ".00");
+        }
 
         if (userInput.length === 0 || Number(userInput) < 0) {
             setBillAmount("");
@@ -323,7 +347,11 @@ function App() {
         const userInput = event.target.value;
 
         let [whole, _] = userInput.split(".");
-        whole = whole.length > 4 ? whole.slice(0, 4) : whole;
+        if (whole == 1000) {
+            whole = 999;
+        } else {
+            whole = whole.length > 3 ? whole.slice(0, 3) : whole;
+        }
 
         if (whole < 1) {
             setTipPercentage("");
@@ -350,6 +378,8 @@ function App() {
 
         if (userInput < 0) {
             setNumberOfPeople("");
+        } else if (userInput > 999) {
+            setNumberOfPeople(999);
         } else {
             console.log({ userInput });
             console.log(parseInt(userInput));
