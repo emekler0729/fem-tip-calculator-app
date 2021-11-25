@@ -1,11 +1,4 @@
 /*  @TODO
-    NUMBER OF PEOPLE INPUT
-        Add Number of People Active State (Number of People Can't be Zero Warning)
-            Create a style that is applied when the value is zero.
-    
-    CALCULATION LOGIC
-        Check math for example input ($142.55 & 5 people)
-
     CUSTOM INPUT FIELD
         Input validation for the Custom Input Field
 
@@ -283,11 +276,11 @@ const ResetButton = styled(Button)`
 
 /* CONSTANTS */
 const TIP_PERCENTAGE = {
-    tip5: 0.05,
-    tip10: 0.1,
-    tip15: 0.15,
-    tip25: 0.25,
-    tip50: 0.5,
+    tip5: 5,
+    tip10: 10,
+    tip15: 15,
+    tip25: 25,
+    tip50: 50,
 };
 
 const DEFAULT = {
@@ -308,10 +301,10 @@ function App() {
     function onBillChange(event) {
         event.preventDefault();
 
-        let userInput = event.target.value;
+        const userInput = event.target.value;
 
         let [whole, _] = userInput.split(".");
-        whole = whole.length > 13 ? whole.slice(0, 13) : whole;
+        whole = whole.length > 6 ? whole.slice(0, 6) : whole;
         const decimal = userInput.match(/\.\d{0,2}/g);
         const num = whole + (decimal || ".00");
 
@@ -324,11 +317,21 @@ function App() {
         }
     }
 
-    // TODO add Input validation
     function onCustomChange(event) {
         event.preventDefault();
-        setTipPercentage(Number(event.target.value / 100));
-        setActiveTipButtonID("custom");
+
+        const userInput = event.target.value;
+
+        let [whole, _] = userInput.split(".");
+        whole = whole.length > 4 ? whole.slice(0, 4) : whole;
+
+        if (whole < 1) {
+            setTipPercentage("");
+            setActiveTipButtonID("");
+        } else {
+            setTipPercentage(whole);
+            setActiveTipButtonID("custom");
+        }
     }
 
     function onButtonClick(event) {
@@ -363,7 +366,7 @@ function App() {
 
     useEffect(() => {
         if (billAmount && tipPercentage && numberOfPeople) {
-            const tipAmount = billAmount * tipPercentage;
+            const tipAmount = (billAmount * tipPercentage) / 100;
             const total = parseFloat(billAmount) + parseFloat(tipAmount);
 
             setTipAmount(tipAmount / numberOfPeople);
@@ -420,7 +423,7 @@ function App() {
                                 type="number"
                                 step="1"
                                 placeholder="Custom"
-                                value={activeTipButtonID === "custom" ? tipPercentage * 100 : ""}
+                                value={activeTipButtonID === "custom" ? tipPercentage.toString() : ""}
                                 onInput={onCustomChange}
                             ></CustomInput>
                         </ButtonGroup>
