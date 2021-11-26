@@ -12,7 +12,6 @@ This is a solution to the [Tip calculator app challenge on Frontend Mentor](http
     -   [Built with](#built-with)
     -   [What I learned](#what-i-learned)
     -   [Continued development](#continued-development)
-    -   [Useful resources](#useful-resources)
 -   [Author](#author)
 
 ## Overview
@@ -53,16 +52,7 @@ For my implementation, I chose to limit the range of the user's input to less th
 
 ### Continued development
 
-Use this section to outline areas that you want to continue focusing on in future projects. These could be concepts you're still not completely comfortable with or techniques you found useful that you want to refine and perfect.
-
-**Note: Delete this note and the content within this section and replace with your own plans for continued development.**
-
-### Useful resources
-
--   [Example resource 1](https://www.example.com) - This helped me for XYZ reason. I really liked this pattern and will use it going forward.
--   [Example resource 2](https://www.example.com) - This is an amazing article which helped me finally understand XYZ. I'd recommend it to anyone still learning this concept.
-
-**Note: Delete this note and replace the list above with resources that helped you during the challenge. These could come in handy for anyone viewing your solution or for yourself when you look back on this project in the future.**
+The input validation could continue to be improved, especially on iOS. As currently implemented, iOS does not allow for a decimal value to be entered into the bill. To overcome this, I would change the architecture to track the displayed input and the values used for calculation separately.
 
 ## Author
 

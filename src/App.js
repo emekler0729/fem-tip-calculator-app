@@ -432,7 +432,7 @@ function App() {
                                 type="number"
                                 step="0.01"
                                 placeholder="0"
-                                inputmode="decimal"
+                                inputMode="decimal"
                                 value={billAmount.toString()}
                                 onChange={onBillChange}
                             ></Input>
@@ -462,7 +462,7 @@ function App() {
                                     type="number"
                                     step="1"
                                     placeholder="Custom"
-                                    inputmode="decimal"
+                                    inputMode="decimal"
                                     value={activeTipButtonID === "custom" ? tipPercentage.toString() : ""}
                                     onInput={onCustomChange}
                                     active={activeTipButtonID}
@@ -483,7 +483,7 @@ function App() {
                                 type="number"
                                 step="1"
                                 placeholder="0"
-                                inputmode="decimal"
+                                inputMode="decimal"
                                 value={numberOfPeople.toString()}
                                 onChange={onPeopleChange}
                                 alert={numberOfPeople === 0}
