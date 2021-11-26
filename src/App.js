@@ -1,9 +1,6 @@
 /*  @TODO
     CUSTOM INPUT FIELD
         Show percent symbol after Custom Input      
-
-    OUTPUT VISUALS
-        Make output responsive for all input cases
 */
 
 import styled from "styled-components";
@@ -127,13 +124,26 @@ const InputWrapper = styled.div`
     position: relative;
 `;
 
-// @TODO color is not working
 const IconStyle = {
     position: "absolute",
     top: "50%",
     left: horizontalPadding,
     transform: "translateY(-50%)",
+    zIndex: 1,
+    fontSize: "1.6rem",
 };
+
+const PercentIcon = styled.span`
+    position: absolute;
+    display: ${(props) => (props.active === "custom" ? "grid" : "none")};
+    place-items: center;
+    height: 100%;
+    top: 0;
+    right: ${horizontalPadding};
+    font-size: 2.4rem;
+    color: ${colorNeutralCyanDark1};
+    font-weight: bold;
+`;
 
 const Input = styled.input`
     display: block;
@@ -172,6 +182,8 @@ const Input = styled.input`
 `;
 
 const CustomInput = styled(Input)`
+    padding-right: ${(props) => (props.active === "custom" ? "2.8rem" : horizontalPadding)};
+    height: 100%;
     -moz-appearance: textfield;
 
     &::-webkit-outer-spin-button,
@@ -448,14 +460,18 @@ function App() {
                             <Button onClick={onButtonClick} id="tip50">
                                 50%
                             </Button>
-                            <CustomInput
-                                id="custom"
-                                type="number"
-                                step="1"
-                                placeholder="Custom"
-                                value={activeTipButtonID === "custom" ? tipPercentage.toString() : ""}
-                                onInput={onCustomChange}
-                            ></CustomInput>
+                            <InputWrapper>
+                                <CustomInput
+                                    id="custom"
+                                    type="number"
+                                    step="1"
+                                    placeholder="Custom"
+                                    value={activeTipButtonID === "custom" ? tipPercentage.toString() : ""}
+                                    onInput={onCustomChange}
+                                    active={activeTipButtonID}
+                                ></CustomInput>
+                                <PercentIcon active={activeTipButtonID}>%</PercentIcon>
+                            </InputWrapper>
                         </ButtonGroup>
                     </FormInputGroup>
                     <FormInputGroup>
