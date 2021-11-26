@@ -1,8 +1,3 @@
-/*  @TODO
-    CUSTOM INPUT FIELD
-        Show percent symbol after Custom Input      
-*/
-
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 import { ReactComponent as DollarIcon } from "./images/icon-dollar.svg";
@@ -209,7 +204,7 @@ const ButtonGroup = styled.div`
         color: ${colorNeutralCyanDark1};
     }
 
-    & > Input#${(props) => props.activeId} {
+    & Input#${(props) => props.activeId} {
         outline: ${colorPrimary} auto 1px;
         outline-offset: 0px;
     }
@@ -437,6 +432,7 @@ function App() {
                                 type="number"
                                 step="0.01"
                                 placeholder="0"
+                                inputmode="decimal"
                                 value={billAmount.toString()}
                                 onChange={onBillChange}
                             ></Input>
@@ -466,6 +462,7 @@ function App() {
                                     type="number"
                                     step="1"
                                     placeholder="Custom"
+                                    inputmode="decimal"
                                     value={activeTipButtonID === "custom" ? tipPercentage.toString() : ""}
                                     onInput={onCustomChange}
                                     active={activeTipButtonID}
@@ -486,6 +483,7 @@ function App() {
                                 type="number"
                                 step="1"
                                 placeholder="0"
+                                inputmode="decimal"
                                 value={numberOfPeople.toString()}
                                 onChange={onPeopleChange}
                                 alert={numberOfPeople === 0}
